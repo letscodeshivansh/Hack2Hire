@@ -74,6 +74,6 @@ const User = mongoose.model('User', userSchema);
 
 const Message = mongoose.model('Message', messageSchema);
 
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model('Post', )
 
-module.exports = { User, Task, Message, Post };
+module.exports = { User, Task, Message };

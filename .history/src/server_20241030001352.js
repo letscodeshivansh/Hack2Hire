@@ -262,11 +262,9 @@ app.get('/postwork', async (req, res) => {
 //   res.render('postshare', { post, loggedInUsername });
 // })
 
+// Route to display the post creation form
 app.get('/postshare', (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
-  if (!loggedInUsername) {
-    return res.redirect('/login'); // Redirect to login if the user isn't logged in
-  }
   res.render('postshare', { loggedInUsername });
 });
 
@@ -294,6 +292,7 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     res.status(500).send('Error sharing post');
   }
 });
+
 
 
 const port = 6969;

@@ -5,7 +5,7 @@ const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const { Task, User, Message, Post } = require('./mongodb');  
+const { Task, User, Message } = require('./mongodb');  
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 
@@ -256,46 +256,10 @@ app.get('/postwork', async (req, res) => {
   }
 });
 
-// app.get('/postshare', async (req, res) => {
-//   const post = await Task.find();
-//   const loggedInUsername = req.session.loggedInUsername;
-//   res.render('postshare', { post, loggedInUsername });
-// })
 
-app.get('/postshare', (req, res) => {
-  const loggedInUsername = req.session.loggedInUsername;
-  if (!loggedInUsername) {
-    return res.redirect('/login'); // Redirect to login if the user isn't logged in
-  }
-  res.render('postshare', { loggedInUsername });
-});
-
-// Route to handle post creation form submission
-app.post('/postshare', upload.single('image'), async (req, res) => {
-  try {
-    const { caption } = req.body;
-    const author = req.session.loggedInUsername;
-
-    let imageUrl = '';
-    if (req.file) {
-      imageUrl = '/uploads/' + req.file.filename;
-    }
-
-    const newPost = new Post({
-      caption,
-      imageUrl,
-      author,
-    });
-
-    await newPost.save();
-    res.redirect('/index');
-  } catch (error) {
-    console.error('Error sharing post:', error);
-    res.status(500).send('Error sharing post');
-  }
-});
-
-
+app.post('/postshare', async (req, res) => {
+  
+})
 const port = 6969;
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);

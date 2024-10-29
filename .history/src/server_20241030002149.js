@@ -262,12 +262,15 @@ app.get('/postwork', async (req, res) => {
 //   res.render('postshare', { post, loggedInUsername });
 // })
 
-app.get('/postshare', (req, res) => {
-  const loggedInUsername = req.session.loggedInUsername;
-  if (!loggedInUsername) {
-    return res.redirect('/login'); // Redirect to login if the user isn't logged in
+app.get('/postshare', async (req, res) => {
+  try {
+    const posts = await Post.find(); // or Task.find() based on your requirements
+    const loggedInUsername = req.session.loggedInUsername;
+    res.render('postshare', { posts, loggedInUsername });
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).send('Error fetching posts');
   }
-  res.render('postshare', { loggedInUsername });
 });
 
 // Route to handle post creation form submission

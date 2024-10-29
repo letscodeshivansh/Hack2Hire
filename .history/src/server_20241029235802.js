@@ -256,31 +256,20 @@ app.get('/postwork', async (req, res) => {
   }
 });
 
-// app.get('/postshare', async (req, res) => {
-//   const post = await Task.find();
-//   const loggedInUsername = req.session.loggedInUsername;
-//   res.render('postshare', { post, loggedInUsername });
-// })
+app.get()
 
-app.get('/postshare', (req, res) => {
-  const loggedInUsername = req.session.loggedInUsername;
-  if (!loggedInUsername) {
-    return res.redirect('/login'); // Redirect to login if the user isn't logged in
-  }
-  res.render('postshare', { loggedInUsername });
-});
-
-// Route to handle post creation form submission
 app.post('/postshare', upload.single('image'), async (req, res) => {
   try {
     const { caption } = req.body;
-    const author = req.session.loggedInUsername;
+    const author = req.session.loggedInUsername; // Fetch logged-in user from session
 
+    // Check if image was uploaded
     let imageUrl = '';
     if (req.file) {
-      imageUrl = '/uploads/' + req.file.filename;
+      imageUrl = '/uploads/' + req.file.filename;  // Save the image path
     }
 
+    // Create a new post and save to the database
     const newPost = new Post({
       caption,
       imageUrl,
@@ -288,13 +277,14 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     });
 
     await newPost.save();
+
+    // Redirect to index or wherever posts are displayed
     res.redirect('/index');
   } catch (error) {
     console.error('Error sharing post:', error);
     res.status(500).send('Error sharing post');
   }
 });
-
 
 const port = 6969;
 server.listen(port, () => {

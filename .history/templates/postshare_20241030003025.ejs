@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Post</title>
+  <!-- Link to the Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  
+  <div class="container mx-auto mt-8">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
+      <h2 class="text-2xl font-semibold text-center text-gray-700 mb-4">Create a New Post</h2>
+      
+      <!-- Display logged-in user (if applicable) -->
+      <% if (loggedInUsername) { %>
+        <p class="text-center text-gray-600 mb-4">Hello, <%= loggedInUsername %>! Share your thoughts below.</p>
+      <% } %>
+
+      <!-- Form to create a new post -->
+      <form action="/postshare" method="posy" enctype="multipart/form-data">
+        
+        <!-- Caption Field -->
+        <div class="mb-4">
+          <label for="caption" class="block text-gray-700 text-sm font-bold mb-2">Caption</label>
+          <input
+            type="text"
+            id="caption"
+            name="caption"
+            placeholder="Write your caption here..."
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required
+          />
+        </div>
+        
+        <!-- Image Upload Field -->
+        <div class="mb-4">
+          <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Image (optional)</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="flex items-center justify-between">
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Post
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

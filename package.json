@@ -1,7 +1,7 @@
 {
   "name": "hack2hire",
   "version": "1.0.0",
-  "description": "",
+  "description": "<div align=\"center\">\r     <img src=\"https://github.com/letscodeshivansh/MakeMyWork-MERN/assets/125864444/ee17cd09-0a7b-4597-8971-5aac0db8596c\" alt=\"logo-mmw-removebg-preview\" width=\"350\"/>\r </div>",
   "main": "index.js",
   "dependencies": {
     "abbrev": "^1.1.1",
@@ -219,5 +219,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {}
 }

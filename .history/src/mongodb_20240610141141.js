@@ -50,13 +50,6 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-const postSchema = new mongoose.Schema({
-  caption: String,
-  imageUrl: String,
-  author: String,   // Store the username or user ID
-  createdAt: { type: Date, default: Date.now },
-});
-
 const messageSchema = new mongoose.Schema({
   taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
   sender: String,
@@ -74,6 +67,4 @@ const User = mongoose.model('User', userSchema);
 
 const Message = mongoose.model('Message', messageSchema);
 
-const Post = mongoose.model('Post', postSchema);
-
-module.exports = { User, Task, Message, Post };
+module.exports = { User, Task, Message };
