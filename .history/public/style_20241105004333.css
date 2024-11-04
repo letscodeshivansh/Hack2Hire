@@ -174,11 +174,11 @@ body {
     font-size: 15px;
 }
 
-.ai-chat button:hover {
+.addpost button:hover {
     background-color: #660000; /* Change background color on hover */
 }
 
-.ai-chat button a:hover {
+.addpost button a:hover {
     color: #ffffff; /* Maintain text color on hover */
 }
 

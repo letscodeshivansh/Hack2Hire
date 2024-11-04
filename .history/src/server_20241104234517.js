@@ -76,7 +76,6 @@ app.get('/index', async (req, res) => {
     res.status(500).send('Error loading page');
   }
 });
-
 app.get("/chatroom", isAuthenticated, async (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
 
@@ -256,7 +255,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
   });
   
 
-app.get('/postwork', isAuthenticated, async (req, res) => {
+app.get('/postwork',isAuthenticated, async (req, res) => {
   try {
     const tasks = await Task.find();
     const loggedInUsername = req.session.loggedInUsername;
@@ -305,11 +304,6 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     console.error('Error sharing post:', error);
     res.status(500).send('Error sharing post');
   }
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong, please try again later');
 });
 
 

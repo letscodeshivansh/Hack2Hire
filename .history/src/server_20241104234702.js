@@ -76,7 +76,6 @@ app.get('/index', async (req, res) => {
     res.status(500).send('Error loading page');
   }
 });
-
 app.get("/chatroom", isAuthenticated, async (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
 
@@ -307,10 +306,7 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
   }
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong, please try again later');
-});
+
 
 
 const port = 6969;

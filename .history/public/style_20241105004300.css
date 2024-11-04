@@ -158,7 +158,7 @@ body {
     color: #ffffff; /* Maintain text color on hover */
 }
 
-.ai-chat button {
+.addpost button {
     background-color: #c20020; /* Set the background color for the button */
     border: none;
     padding: 10px 20px;
@@ -168,17 +168,17 @@ body {
     box-shadow: 0 0 6px 6px rgba(255, 255, 255, 0.7);
 }
 
-.ai-chat button a {
+.addpost button a {
     text-decoration: none;
     color: #ffffff;
     font-size: 15px;
 }
 
-.ai-chat button:hover {
+.addpost button:hover {
     background-color: #660000; /* Change background color on hover */
 }
 
-.ai-chat button a:hover {
+.addpost button a:hover {
     color: #ffffff; /* Maintain text color on hover */
 }
 

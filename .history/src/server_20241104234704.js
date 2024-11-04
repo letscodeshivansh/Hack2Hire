@@ -76,7 +76,6 @@ app.get('/index', async (req, res) => {
     res.status(500).send('Error loading page');
   }
 });
-
 app.get("/chatroom", isAuthenticated, async (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
 

@@ -32,7 +32,6 @@
     <!-- Add Work and Add Post Buttons -->
     <div class="addwork"><button type="button"><a href="postwork">Add Work</a></button></div>
     <div class="addpost"><button type="button"><a href="postshare">Add Post</a></button></div>
-    <div class="ai-chat"><button type="button"><a href="askai">Ask AI</a></button></div>
   </div>
 
   <!-- Main Content -->
@@ -65,32 +64,21 @@
       <% }); %>
     </div>
 
-    <!-- Posts Section -->
+    {% comment %} {% comment %} {% comment %} <!-- Posts Section -->
     <h2>Recent Posts</h2>
-<hr>
+    <hr>
     <div class="post-cards" id="post-cards">
       <% posts.forEach(post => { %>
         <div class="card">
-          <div class="postOwner">
-            <h6>Posted by: <%= post.author %></h6>
-          </div>
-
+          <div class="postOwner"><h6>Posted by: <%= post.author %> </h6></div>
           <% if (post.imageUrl) { %>
-            <!-- Display the uploaded image here with the correct path -->
-            <div class="image">
-              <img src="/uploads/<%= post.imageUrl %>" alt="Post Image" />
-            </div>
+            <div class="image" style="background-image: url('<%= post.imageUrl %>');"></div>
           <% } %>
-
-          <div class="caption">
-            <h6>Caption:</h6>
-            <p><%= post.caption %></p>
-          </div>
+          <div class="caption"><h6>Caption:</h6><%= post.caption %></div>
         </div>
       <% }); %>
     </div>
-
-  </div> 
+  </div> {% endcomment %} {% endcomment %} {% endcomment %}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

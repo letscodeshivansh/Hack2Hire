@@ -27,14 +27,6 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-//for authentication 
-function isAuthenticated(req, res, next) {
-  if (req.session.loggedInUsername) {
-    return next();
-  }
-  res.redirect('/login');
-}
-
 io.use(require('express-socket.io-session')(sessionMiddleware, {
   autoSave: true
 }));
@@ -55,7 +47,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(parentDir, 'public')));
 app.use(express.static(path.join(parentDir, 'assets')));
 
-app.get('/', isAuthenticated, async (req, res) => {
+app.get('/', (req, res) => {
   res.render('landing');
 });
 
@@ -63,7 +55,6 @@ app.get('/aboutus', (req, res) => {
     res.render("aboutus");
 });
 
-//the page open after logging 
 app.get('/index', async (req, res) => {
   try {
     const loggedInUsername = req.session.loggedInUsername;
@@ -77,7 +68,7 @@ app.get('/index', async (req, res) => {
   }
 });
 
-app.get("/chatroom", isAuthenticated, async (req, res) => {
+app.get("/chatroom", async (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
 
   if (!loggedInUsername) {
@@ -256,7 +247,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
   });
   
 
-app.get('/postwork', isAuthenticated, async (req, res) => {
+app.get('/postwork', async (req, res) => {
   try {
     const tasks = await Task.find();
     const loggedInUsername = req.session.loggedInUsername;
@@ -273,7 +264,6 @@ app.get('/postwork', isAuthenticated, async (req, res) => {
 //   res.render('postshare', { post, loggedInUsername });
 // })
 
-// Route to render post sharing page
 app.get('/postshare', (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
   if (!loggedInUsername) {
@@ -305,11 +295,6 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     console.error('Error sharing post:', error);
     res.status(500).send('Error sharing post');
   }
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong, please try again later');
 });
 
 
