@@ -71,6 +71,7 @@ body {
 
 .logo-container {
     margin-top: 15px;
+    margin-left: -2%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,7 +80,7 @@ body {
     overflow: hidden;
     background: url('logo.png') no-repeat center center;
     background-size: 150px 150px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     grid-column: 1 / 6;
 
 }
@@ -89,7 +90,7 @@ body {
     height: auto;
     object-fit: contain;
     display: block;
-    margin: auto;
+    /* margin: auto; */
 }
 
 .nav-items {
@@ -118,7 +119,6 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
     border-radius:10cap;
-    box-shadow: 0 0 6px 6px rgba(255, 255, 255, 0.7);
 }
 
 .addwork button a {
@@ -129,10 +129,15 @@ body {
 
 .addwork button:hover {
     background-color: #660000; /* Change background color on hover */
+    box-shadow: 0 0 6px 6px rgba(255, 255, 255, 0.7);
+
 }
 
 .addwork button a:hover {
     color: #ffffff; /* Maintain text color on hover */
+}
+.addpost{
+    margin-top: 3%;
 }
 .addpost button {
     background-color: #c20020; /* Set the background color for the button */
@@ -141,7 +146,6 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
     border-radius:10cap;
-    box-shadow: 0 0 6px 6px rgba(255, 255, 255, 0.7);
 }
 
 .addpost button a {
@@ -152,12 +156,17 @@ body {
 
 .addpost button:hover {
     background-color: #660000; /* Change background color on hover */
+    box-shadow: 0 0px 6px 6px rgba(255, 255, 255, 0.7);
+
 }
 
 .addpost button a:hover {
     color: #ffffff; /* Maintain text color on hover */
 }
-
+.ai-chat{
+    margin-top: 3%;
+    margin-left: 1.5%;
+}
 .ai-chat button {
     background-color: #c20020; /* Set the background color for the button */
     border: none;
@@ -165,7 +174,6 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
     border-radius:10cap;
-    box-shadow: 0 0 6px 6px rgba(255, 255, 255, 0.7);
 }
 
 .ai-chat button a {
@@ -176,6 +184,8 @@ body {
 
 .ai-chat button:hover {
     background-color: #660000; /* Change background color on hover */
+    box-shadow: 0 0 6px 6px rgba(255, 255, 255, 0.7);
+
 }
 
 .ai-chat button a:hover {
@@ -453,4 +463,28 @@ body {
 }
 
 
+/* Css for postshare.ejs */
 
+.postshare-container{
+    display: flex;
+    justify-content: center;
+}
+.postshare-submit-button{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+.postshare-content-container{
+    height: 80%;
+}
+.postshare-caption-input{
+    /* padding: 15% 5%; */
+    padding-bottom: 25%;
+    margin-bottom: 5%;
+}
+.mb-4{
+    margin-bottom: 5%;
+}
+.postshare-main-content{
+    padding: 4% 2%;
+}
