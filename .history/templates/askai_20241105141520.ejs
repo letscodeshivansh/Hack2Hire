@@ -105,21 +105,16 @@
             addMessage(question, "user-message");
             userInput.value = "";
 
-            fetch("/askai", {
+            fetch("../askai", {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json",
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ question }),
             })
                 .then(response => response.json())
-                .then(data => {
-                  console.log("Server response:", data);
-                  addMessage(data.answer, "ai-message");
-                })
-                .catch(error => {
-                  console.error("Fetch error:", error);
-                });
+                .then(data => addMessage(data.answer, "ai-message"))
+                .catch(error => console.error("Error:", error));
         }
 
         // Add a message to the chat

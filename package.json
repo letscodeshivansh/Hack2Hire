@@ -155,6 +155,7 @@
     "proxy-addr": "^2.0.7",
     "pstree.remy": "^1.1.8",
     "punycode": "^2.3.1",
+    "python-shell": "^5.0.0",
     "qs": "^6.11.0",
     "random-bytes": "^1.0.0",
     "range-parser": "^1.2.1",
@@ -219,6 +220,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {}
+  "license": "ISC"
 }

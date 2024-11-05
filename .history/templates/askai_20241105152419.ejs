@@ -111,7 +111,7 @@
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ question }),
-            })
+              })
                 .then(response => response.json())
                 .then(data => {
                   console.log("Server response:", data);
@@ -120,6 +120,10 @@
                 .catch(error => {
                   console.error("Fetch error:", error);
                 });
+              
+                .then(response => response.json())
+                .then(data => addMessage(data.answer, "ai-message"))
+                .catch(error => console.error("Error:", error));
         }
 
         // Add a message to the chat

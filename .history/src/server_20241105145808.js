@@ -28,8 +28,6 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-app.use(bodyParser.json());
-
 //for authentication 
 function isAuthenticated(req, res, next) {
   if (req.session.loggedInUsername) {

@@ -28,8 +28,6 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-app.use(bodyParser.json());
-
 //for authentication 
 function isAuthenticated(req, res, next) {
   if (req.session.loggedInUsername) {
@@ -310,11 +308,6 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
   }
 });
 
-// Route for rendering the chat interface
-app.get("/askai", (req, res) => {
-  res.render("askai");
-});
-
 app.post("/askai", (req, res) => {
   const question = req.body.question;
 
@@ -346,7 +339,6 @@ app.post("/askai", (req, res) => {
     res.json({ answer: result.join("") });
   });
 });
-
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

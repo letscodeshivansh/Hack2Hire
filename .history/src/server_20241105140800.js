@@ -28,8 +28,6 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-app.use(bodyParser.json());
-
 //for authentication 
 function isAuthenticated(req, res, next) {
   if (req.session.loggedInUsername) {
@@ -310,40 +308,26 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
   }
 });
 
-// Route for rendering the chat interface
-app.get("/askai", (req, res) => {
-  res.render("askai");
-});
-
-app.post("/askai", (req, res) => {
+app.get("/askai", async(req, res) => {
+  res.render("askai")
+})
+// routing ai chat box 
+app.post("askai", (req, res) => {
   const question = req.body.question;
 
-  if (!question) {
-    return res.status(400).json({ error: "No question provided" });
-  }
-
-  console.log("Received question:", question); // Debugging
-
   let options = {
-    mode: "text",
-    pythonOptions: ["-u"],
-    scriptPath: path.join(__dirname, '..'),  // Ensure this is correct
-    args: [question]
+      mode: "text",
+      pythonOptions: ["-u"],
+      scriptPath: "./",  // Adjust the path if needed
+      args: [question]
   };
 
-  PythonShell.run("askai.py", options, (err, result) => {
-    if (err) {
-      console.error("Error in PythonShell:", err);
-      return res.status(500).json({ error: "AI response error" });
-    }
-
-    if (!result || result.length === 0) {
-      console.error("Empty response from Python script");
-      return res.status(500).json({ error: "Empty response from AI" });
-    }
-
-    console.log("AI Response:", result); // Debugging
-    res.json({ answer: result.join("") });
+  PythonShell.run("chatai.py", options, (err, result) => {
+      if (err) {
+          console.error("Error:", err);
+          return res.status(500).json({ error: "AI response error" });
+      }
+      res.json({ answer: result.join("") });
   });
 });
 
