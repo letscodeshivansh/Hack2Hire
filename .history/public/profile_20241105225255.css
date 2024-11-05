@@ -1,0 +1,99 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 20px;
+  }
+  .profile-container {
+    width: 80%;
+    max-width: 900px;
+    margin: auto;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  .background-image {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+  }
+  .profile-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+  }
+  .profile-header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid white;
+    position: absolute;
+    top: -60px;
+  }
+  .profile-info {
+    margin-left: 140px;
+  }
+  .profile-info h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+  .bio {
+    font-size: 14px;
+    color: #555;
+  }
+  .contact-btn {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .connections, .rating {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #333;
+  }
+  .list-section {
+    padding: 20px;
+  }
+  .list-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  ul {
+    list-style-type: none;
+  }
+  li {
+    padding: 5px 0;
+    color: #444;
+  }
+  .skills-container {
+    margin-top: 10px;
+  }
+  .skill {
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 2px;
+  }
+  .view-all-skills {
+    margin-top: 10px;
+    display: inline-block;
+    font-size: 12px;
+    color: #007BFF;
+    cursor: pointer;
+    text-decoration: underline;
+  }

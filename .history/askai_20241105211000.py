@@ -14,9 +14,12 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 chat = model.start_chat(history=[])
 
 def get_gemini_response(question):
-    # Get the response
+    # Get the response and extract the text from the first candidate
     response = chat.send_message(question, stream=True)
-    return response
+    try:
+        return response.result["candidates"][0]["content"]["parts"][0]["text"]
+    except (IndexError, KeyError):
+        return "Failed to generate a response."
 
 if __name__ == "__main__":
     # Read the question from command-line arguments

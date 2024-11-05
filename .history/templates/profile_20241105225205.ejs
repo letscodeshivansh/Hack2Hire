@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelancer Profile</title>
+  <style>
+    /* Basic Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+    .profile-container {
+      width: 80%;
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .background-image {
+      width: 100%;
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+    .profile-header img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 5px solid white;
+      position: absolute;
+      top: -60px;
+    }
+    .profile-info {
+      margin-left: 140px;
+    }
+    .profile-info h2 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .bio {
+      font-size: 14px;
+      color: #555;
+    }
+    .contact-btn {
+      margin-top: 10px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .connections, .rating {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #333;
+    }
+    .list-section {
+      padding: 20px;
+    }
+    .list-section h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style-type: none;
+    }
+    li {
+      padding: 5px 0;
+      color: #444;
+    }
+    .skills-container {
+      margin-top: 10px;
+    }
+    .skill {
+      display: inline-block;
+      background-color: #007BFF;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      margin: 2px;
+    }
+    .view-all-skills {
+      margin-top: 10px;
+      display: inline-block;
+      font-size: 12px;
+      color: #007BFF;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <div class="background-image" style="background-image: url('<%= profile.backgroundImage %>');"></div>
+    <div class="profile-header">
+      <img src="<%= profile.mainImage %>" alt="Profile Picture">
+      <div class="profile-info">
+        <h2><%= profile.name %></h2>
+        <p class="bio"><%= profile.bio %></p>
+        <a href="mailto:<%= profile.contact %>" class="contact-btn">Contact</a>
+        <p class="connections">Connections: <%= profile.totalConnections %></p>
+        <p class="rating">Rating: <%= profile.rating %> / 5 ★</p>
+      </div>
+    </div>
+    <div class="list-section">
+      <h3>Experience</h3>
+      <ul>
+        <% profile.experience.forEach(function(item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="list-section">
+      <h3>Education</h3>
+      <ul>
+        <% profile.education.forEach(function(item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="list-section">
+      <h3>Projects Done</h3>
+      <ul>
+        <% profile.projects.forEach(function(item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="list-section skills-container">
+      <h3>Skills</h3>
+      <div>
+        <% profile.skills.forEach(function(skill) { %>
+          <span class="skill"><%= skill %></span>
+        <% }); %>
+      </div>
+      <div class="view-all-skills">View All Skills</div>
+    </div>
+  </div>
+</body>
+</html>

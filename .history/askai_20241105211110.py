@@ -16,7 +16,12 @@ chat = model.start_chat(history=[])
 def get_gemini_response(question):
     # Get the response
     response = chat.send_message(question, stream=True)
-    return response
+    try:
+        # Access the _result attribute
+        result = response._result
+        return result["candidates"][0]["content"]["parts"][0]["text"]
+    except (IndexError, KeyError, AttributeError):
+        return "Failed to generate a response."
 
 if __name__ == "__main__":
     # Read the question from command-line arguments
