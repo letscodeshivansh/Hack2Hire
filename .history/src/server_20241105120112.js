@@ -308,7 +308,7 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
 });
 
 app.get("/askai", async(req, res) => {
-  res.render("askai")
+  res
 })
 // routing ai chat box 
 app.post("/api/ask-ai", (req, res) => {

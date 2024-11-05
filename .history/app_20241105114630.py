@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Route for the homepage
 @app.route('/')
 def home():
-    return render_template('index.ejs')
+    return render_template('index.h')
 
 # API endpoint to handle chat messages
 @app.route('/get_response', methods=['POST'])
