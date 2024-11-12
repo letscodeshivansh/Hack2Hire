@@ -244,7 +244,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
         deadline,
         price,
         images: imageUrls,
-        taskOwner, 
+        taskOwner, // Use req.session.loggedInUsername as task owner
       });
   
       await taskAdded.save();
@@ -256,6 +256,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
       res.status(500).send('Error adding task');
     }
   });
+  
 app.get('/postwork', isAuthenticated, async (req, res) => {
   try {
     const tasks = await Task.find();
@@ -276,49 +277,7 @@ app.get('/postshare', (req, res) => {
   res.render('postshare', { loggedInUsername });
 });
 
-app.post('/postshare', upload.single('image'), async (req, res) => {
-  try {
-    const { caption } = req.body;
-    const author = req.session.loggedInUsername;
-
-    let imageUrl = '';
-    if (req.file) {
-      imageUrl = '/uploads/' + req.file.filename;
-    }
-
-    const newPost = new Post({
-      caption,
-      imageUrl,
-      author,
-    });
-
-    await newPost.save();
-    res.redirect('/index');
-  } catch (error) {
-    console.error('Error sharing post:', error);
-    res.status(500).send('Error sharing post');
-  }
-});
-app.get('/postwork', isAuthenticated, async (req, res) => {
-  try {
-    const tasks = await Task.find();
-    const loggedInUsername = req.session.loggedInUsername;
-    res.render('postwork', { tasks, loggedInUsername });
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).send('Error fetching tasks');
-  }
-});
-
-// Route to render post sharing page
-app.get('/postshare', (req, res) => {
-  const loggedInUsername = req.session.loggedInUsername;
-  if (!loggedInUsername) {
-    return res.redirect('/login'); 
-  }
-  res.render('postshare', { loggedInUsername });
-});
-
+// Route to handle post creation form submission
 app.post('/postshare', upload.single('image'), async (req, res) => {
   try {
     const { caption } = req.body;
