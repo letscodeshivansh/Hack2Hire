@@ -66,7 +66,8 @@
 
 - Shivansh Srivastava
 - Karanveer Singh
-- Saurav Kispotta
+- Sourav Kispotta
+
 
 ## About us: 
 "We are a team of passionate third-year software and coding enthusiasts from Punjab Engineering College, Chandigarh, driven by a commitment to solving real-world problems with innovative tech solutions."
