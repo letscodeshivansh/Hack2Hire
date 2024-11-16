@@ -90,6 +90,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+module.exports = mongoose.model('User', userSchema);
 const postSchema = new mongoose.Schema({
   caption: String,
   imageUrl: String,
@@ -105,6 +106,10 @@ const messageSchema = new mongoose.Schema({
   dateTime: { type: Date, default: Date.now },
 });
 
+
+
+
+const Profile = mongoose.model('Profile', profileSchema);
 
 // Create and export the Task model
 const Task = mongoose.model('Task', taskSchema);

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelancer Profile</title>
+  <link href="profile.css" rel="stylesheet">
+</head>
+<body>
+  <div class="profile-container">
+    <div class="background-image" style="background-image: url('<%= profile.backgroundImage %>');"></div>
+    <div class="profile-header">
+      <img src="<%= profile.mainImage %>" alt="Profile Picture">
+      <div class="profile-info">
+        <h2><%= profile.username %></h2>
+        <p class="bio"><%= profile.bio %></p>
+        <a href="mailto:<%= profile.contact %>" class="contact-btn">Contact</a>
+        <p class="connections">Connections: <%= profile.totalConnections %></p>
+        <p class="rating">Rating: <%= profile.rating %> / 5 ★</p>
+      </div>
+    </div>
+    <div class="list-section">
+      <h3>Experience</h3>
+      <ul>
+        <% profile.experience.forEach(function(item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="list-section">
+      <h3>Education</h3>
+      <ul>
+        <% profile.education.forEach(function(item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="list-section">
+      <h3>Projects Done</h3>
+      <ul>
+        <% profile.projects.forEach(function(item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="list-section skills-container">
+      <h3>Skills</h3>
+      <div>
+        <% profile.skills.forEach(function(skill) { %>
+          <span class="skill"><%= skill %></span>
+        <% }); %>
+      </div>
+    </div>
+    
+    <!-- Update Profile Form -->
+    <form action="/profile" method="POST">
+      <label for="bio">Bio:</label>
+      <input type="text" name="bio" value="<%= profile.bio %>">
+      
+      <label for="contact">Contact:</label>
+      <input type="text" name="contact" value="<%= profile.contact %>">
+      
+      <label for="mainImage">Profile Image URL:</label>
+      <input type="text" name="mainImage" value="<%= profile.mainImage %>">
+      
+      <label for="backgroundImage">Background Image URL:</label>
+      <input type="text" name="backgroundImage" value="<%= profile.backgroundImage %>">
+      
+      <label for="experience">Experience (comma-separated):</label>
+      <input type="text" name="experience" value="<%= profile.experience.join(",") %>">
+      
+      <label for="education">Education (comma-separated):</label>
+      <input type="text" name="education" value="<%= profile.education.join(",") %>">
+      
+      <label for="projects">Projects Done (comma-separated):</label>
+      <input type="text" name="projects" value="<%= profile.projects.join(",") %>">
+      
+      <label for="skills">Skills (comma-separated):</label>
+      <input type="text" name="skills" value="<%= profile.skills.join(",") %>">
+      
+      <button type="submit">Update Profile</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -11,12 +11,11 @@
         <div class="sidebar">
             <div class="profile">
                 <img src="assets/1.jpg" alt="User Avatar" class="profile-image">
-                <h2 class="username"><a href="/profile"><%= loggedInUsername %></a></h2> <!-- Display the username dynamically -->
+                <h2 class="username"><a href="/profile"><%= userID
+                     %></a></h2> <!-- Display the username dynamically -->
 
                 <p class="user-bio">Developer | Designer | Tech Enthusiast</p>
-                <a href="/postshare">
-                    <button class="post-button">Post</button>
-                </a>
+                <button class="post-button">Post</button>
             </div>
             <div class="menu">
                 <button class="menu-item">Technology</button>
@@ -36,10 +35,7 @@
             <% posts.forEach(post => { %>
             <div class="post-card">
                 <div class="post-header">
-                    <!-- Post photo link to author profile -->
-                    <a href="/profile/<%= loggedInUsername === post.author ? '' : post.author %>">
-                        <img src="<%= post.imageUrl || 'assets/5.jpg' %>" alt="Post User" class="post-avatar">
-                    </a>
+                    <img src="<%= post.imageUrl || 'assets/5.jpg' %>" alt="Post User" class="post-avatar"> <!-- Dynamic image -->
                     <div class="post-info">
                         <h3 class="post-username"><%= post.author %></h3> <!-- Author name -->
                         <p class="post-date"><%= post.createdAt.toLocaleString() %></p> <!-- Post date -->

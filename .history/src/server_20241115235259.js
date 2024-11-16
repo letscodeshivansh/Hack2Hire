@@ -5,11 +5,11 @@ const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const { Task, User, Message, Post } = require('./mongodb');  
+const { Profile, Task, User, Message, Post } = require('./mongodb');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const { PythonShell } = require("python-shell");
-
+const { v4: uuidv4 } = require('uuid');  // To generate unique user IDs
 
 require('dotenv').config();
 
@@ -22,15 +22,15 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 365 * 24 * 60 * 60 * 1000, 
+    maxAge: 365 * 24 * 60 * 60 * 1000,
   },
 });
 
 app.use(sessionMiddleware);
 
-//for authentication 
+// for authentication
 function isAuthenticated(req, res, next) {
-  if (req.session.loggedInUsername) {
+  if (req.session.userID) {  // Updated to check userID instead of username
     return next();
   }
   res.redirect('/login');
@@ -61,17 +61,17 @@ app.get('/', isAuthenticated, async (req, res) => {
 });
 
 app.get('/aboutus', (req, res) => {
-    res.render("aboutus");
+  res.render("aboutus");
 });
 
-//the page open after logging 
+// Home page after logging in
 app.get('/index', async (req, res) => {
   try {
-    const loggedInUsername = req.session.loggedInUsername;
-    const tasks = await Task.find(); // Fetch tasks to display on the index page
-    const posts = await Post.find(); // Fetch posts to display on the index page
+    const userID = req.session.userID;
+    const tasks = await Task.find();
+    const posts = await Post.find();
 
-    res.render('index', { loggedInUsername, tasks, posts });
+    res.render('index', { userID, tasks, posts });
   } catch (error) {
     console.error('Error loading index page:', error);
     res.status(500).send('Error loading page');
@@ -79,20 +79,17 @@ app.get('/index', async (req, res) => {
 });
 
 app.get("/chatroom", isAuthenticated, async (req, res) => {
-  const loggedInUsername = req.session.loggedInUsername;
+  const userID = req.session.userID;
 
-  if (!loggedInUsername) {
+  if (!userID) {
     return res.status(401).send("Unauthorized");
   }
 
   try {
-    // Fetch all tasks where the loggedInUsername is the taskOwner
-    const tasks = await Task.find({ taskOwner: loggedInUsername });
+    const tasks = await Task.find({ taskOwner: userID });
+    const messages = await Message.find({ receiver: userID });
 
-    // Fetch messages where the loggedInUsername is the receiver
-    const messages = await Message.find({ receiver: loggedInUsername }); 
-
-    res.render("chatroom", { tasks, messages, loggedInUsername });
+    res.render("chatroom", { tasks, messages, userID });
   } catch (error) {
     console.error("Error fetching chatroom data:", error);
     res.status(500).send("Error fetching chatroom data");
@@ -109,15 +106,14 @@ app.get("/chat/:taskId", async (req, res) => {
     }
 
     const taskOwner = task.taskOwner;
-    const loggedInUsername = req.session.loggedInUsername;
+    const userID = req.session.userID;
 
-    res.render("chat", { taskOwner, loggedInUsername, taskId });
+    res.render("chat", { taskOwner, userID, taskId });
   } catch (error) {
     console.error("Error fetching task:", error);
     res.status(500).send("Error fetching task");
   }
 });
-
 
 app.get('/chat.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'chat.js'));
@@ -139,21 +135,19 @@ function onConnected(socket) {
   });
 
   socket.on('message', async (data) => {
-    
     console.log('Received message data:', data);
 
-    // Save message to MongoDB
     const message = new Message({
       taskId: data.taskId,
       sender: data.sender,
-      receiver: data.receiver,  
+      receiver: data.receiver,
       message: data.message,
       dateTime: data.dateTime,
     });
 
     try {
       await message.save();
-      socket.broadcast.emit('chat-message', data);  
+      socket.broadcast.emit('chat-message', data);
     } catch (error) {
       console.error('Error saving message to database:', error);
     }
@@ -171,13 +165,14 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username, password });
+    const user = await User.findOne({ username });
 
-    if (!user) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).render('login', { error: 'Invalid username or password' });
     }
 
-    req.session.loggedInUsername = username;
+    req.session.userID = uuidv4();  // Generate unique userID upon login
+    req.session.username = username;
     res.redirect('/index');
   } catch (error) {
     console.error(error);
@@ -188,7 +183,6 @@ app.post('/login', async (req, res) => {
 app.get('/signup', (req, res) => {
   res.render('signup');
 });
-
 
 app.post('/signup', [
   check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
@@ -211,14 +205,14 @@ app.post('/signup', [
     const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
 
-    req.session.loggedInUsername = username;
+    req.session.userID = uuidv4();  // Assign unique userID upon signup
+    req.session.username = username;
     res.redirect('/index');
   } catch (error) {
     console.error(error);
     res.status(500).render('signup', { error: 'An error occurred during signup. Please try again.' });
   }
 });
-
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -231,56 +225,55 @@ const upload = multer({
   }),
 });
 
+app.post('/postwork', upload.array('images', 5), async (req, res) => {
+  try {
+    const { title, description, deadline, price } = req.body;
+    const imageUrls = req.files.map((file) => '/uploads/' + file.filename);
+    const taskOwner = req.session.userID;
+
+    const taskAdded = new Task({
+      title,
+      description,
+      deadline,
+      price,
+      images: imageUrls,
+      taskOwner,
+    });
+
+    await taskAdded.save();
+
+    res.redirect('/index');
+  } catch (error) {
+    console.error('Error adding task:', error);
+    res.status(500).send('Error adding task');
+  }
+});
+
 app.get('/postwork', isAuthenticated, async (req, res) => {
   try {
     const tasks = await Task.find();
-    const loggedInUsername = req.session.loggedInUsername;
-    res.render('postwork', { tasks, loggedInUsername });
+    const userID = req.session.userID;
+    res.render('postwork', { tasks, userID });
   } catch (error) {
     console.error('Error fetching tasks:', error);
     res.status(500).send('Error fetching tasks');
   }
 });
 
-//route for postwork
-app.post('/postwork', upload.array('images', 5), async (req, res) => {
-    try {
-      const { title, description, deadline, price } = req.body;
-      const imageUrls = req.files.map((file) => '/uploads/' + file.filename);
-      const taskOwner = req.session.loggedInUsername;
-  
-      const taskAdded = new Task({
-        title,
-        description,
-        deadline,
-        price,
-        images: imageUrls,
-        taskOwner, 
-      });
-  
-      await taskAdded.save();
-  
-    
-      res.redirect('/index');
-    } catch (error) {
-      console.error('Error adding task:', error);
-      res.status(500).send('Error adding task');
-    }
-  });
-
 // Route to render post sharing page
 app.get('/postshare', (req, res) => {
-  const loggedInUsername = req.session.loggedInUsername;
+  const loggedInUsername = req.session.userID;
   if (!loggedInUsername) {
     return res.redirect('/login'); 
   }
   res.render('postshare', { loggedInUsername });
 });
 
+
 app.post('/postshare', upload.single('image'), async (req, res) => {
   try {
     const { caption } = req.body;
-    const author = req.session.loggedInUsername;
+    const author = req.session.userID;
 
     let imageUrl = '';
     if (req.file) {
@@ -300,6 +293,8 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     res.status(500).send('Error sharing post');
   }
 });
+
+
 
 // Route for rendering the chat interface
 app.get("/askai", (req, res) => {
@@ -338,96 +333,43 @@ app.post("/askai", (req, res) => {
   });
 });
 
-// GET Profile
-app.get("/profile", async (req, res) => {
-  if (!req.session.loggedInUsername) {
-    return res.redirect("/login");
-  }
-
-  try {
-    const user = await User.findOne({ username: req.session.loggedInUsername }); // Use findOne for username
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    res.render("profile", { profile: user });
-  } catch (err) {
-    console.error("Error fetching profile:", err.message, err.stack);
-    res.status(500).send("Server error");
-  }
-});
-
-// GET Update Profile Page
-app.get("/profile/update", async (req, res) => {
-  if (!req.session.loggedInUsername) {
-    return res.redirect("/login");
-  }
-
-  try {
-    const user = await User.findOne({ username: req.session.loggedInUsername });
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    res.render("update_profile", { profile: user });
-  } catch (err) {
-    console.error("Error fetching profile:", err.message);
-    res.status(500).send("Server error");
-  }
-});
-
-// POST Update Profile with Image Upload
-app.post(
-  "/profile/update",
-  upload.fields([
-    { name: "mainImage", maxCount: 1 },
-    { name: "backgroundImage", maxCount: 1 },
-  ]),
-  async (req, res) => {
-    if (!req.session.loggedInUsername) {
-      return res.redirect("/login");
-    }
-
-    try {
-      const updates = {
-        bio: req.body.bio || "",
-        contact: req.body.contact || "",
-        experience: req.body.experience ? req.body.experience.split(",") : [],
-        education: req.body.education ? req.body.education.split(",") : [],
-        projects: req.body.projects ? req.body.projects.split(",") : [],
-        skills: req.body.skills ? req.body.skills.split(",") : [],
-      };
-
-      // Handle uploaded images if provided
-      if (req.files?.mainImage?.[0]) {
-        updates.mainImage = `/uploads/${req.files.mainImage[0].filename}`;
-      }
-      if (req.files?.backgroundImage?.[0]) {
-        updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
-      }
-
-      // Update user in the database
-      const updatedUser = await User.findOneAndUpdate(
-        { username: req.session.loggedInUsername },
-        updates,
-        { new: true } // Return the updated document
-      );
-
-      if (!updatedUser) {
-        return res.status(404).send("User not found");
-      }
-
-      // Redirect to the profile page after successful update
-      res.redirect("/profile");
-    } catch (err) {
-      console.error("Error updating profile:", err.message);
-      res.status(500).send("Server error");
-    }
-  }
-);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong, please try again later');
 });
+
+app.get("/profile", async (req, res) => {
+  if (!req.session.userId) return res.redirect("/login");
+  
+  const user = await User.findById(req.session.userId);
+  if (user) {
+    res.render("profile", { profile: user });
+  } else {
+    res.send("User not found");
+  }
+});
+
+// Route to update profile
+app.post("/profile/update", async (req, res) => {
+  if (!req.session.userId) return res.redirect("/login");
+
+  const { bio, contact, mainImage, backgroundImage, experience, education, projects, skills } = req.body;
+
+  await User.findByIdAndUpdate(req.session.userId, { //req.session.userID
+    bio,
+    contact,
+    mainImage,
+    backgroundImage,
+    experience: experience.split(","),
+    education: education.split(","),
+    projects: projects.split(","),
+    skills: skills.split(",")
+  });
+
+  res.redirect("/profile");
+});
+
 
 const port = 6969;
 server.listen(port, () => {

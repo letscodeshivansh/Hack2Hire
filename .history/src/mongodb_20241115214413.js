@@ -47,46 +47,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  },
-  bio: {
-    type: String,
-    default: ""
-  },
-  contact: {
-    type: String,
-    default: ""
-  },
-  mainImage: {
-    type: String,
-    default: ""
-  },
-  backgroundImage: {
-    type: String,
-    default: ""
-  },
-  totalConnections: {
-    type: Number,
-    default: 0
-  },
-  rating: {
-    type: Number,
-    default: 0
-  },
-  experience: {
-    type: [String],
-    default: []
-  },
-  education: {
-    type: [String],
-    default: []
-  },
-  projects: {
-    type: [String],
-    default: []
-  },
-  skills: {
-    type: [String],
-    default: []
   }
 });
 

@@ -231,17 +231,6 @@ const upload = multer({
   }),
 });
 
-app.get('/postwork', isAuthenticated, async (req, res) => {
-  try {
-    const tasks = await Task.find();
-    const loggedInUsername = req.session.loggedInUsername;
-    res.render('postwork', { tasks, loggedInUsername });
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).send('Error fetching tasks');
-  }
-});
-
 //route for postwork
 app.post('/postwork', upload.array('images', 5), async (req, res) => {
     try {
@@ -267,6 +256,9 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
       res.status(500).send('Error adding task');
     }
   });
+
+
+
 
 // Route to render post sharing page
 app.get('/postshare', (req, res) => {
@@ -338,91 +330,6 @@ app.post("/askai", (req, res) => {
   });
 });
 
-// GET Profile
-app.get("/profile", async (req, res) => {
-  if (!req.session.loggedInUsername) {
-    return res.redirect("/login");
-  }
-
-  try {
-    const user = await User.findOne({ username: req.session.loggedInUsername }); // Use findOne for username
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    res.render("profile", { profile: user });
-  } catch (err) {
-    console.error("Error fetching profile:", err.message, err.stack);
-    res.status(500).send("Server error");
-  }
-});
-
-// GET Update Profile Page
-app.get("/profile/update", async (req, res) => {
-  if (!req.session.loggedInUsername) {
-    return res.redirect("/login");
-  }
-
-  try {
-    const user = await User.findOne({ username: req.session.loggedInUsername });
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    res.render("update_profile", { profile: user });
-  } catch (err) {
-    console.error("Error fetching profile:", err.message);
-    res.status(500).send("Server error");
-  }
-});
-
-// POST Update Profile with Image Upload
-app.post(
-  "/profile/update",
-  upload.fields([
-    { name: "mainImage", maxCount: 1 },
-    { name: "backgroundImage", maxCount: 1 },
-  ]),
-  async (req, res) => {
-    if (!req.session.loggedInUsername) {
-      return res.redirect("/login");
-    }
-
-    try {
-      const updates = {
-        bio: req.body.bio || "",
-        contact: req.body.contact || "",
-        experience: req.body.experience ? req.body.experience.split(",") : [],
-        education: req.body.education ? req.body.education.split(",") : [],
-        projects: req.body.projects ? req.body.projects.split(",") : [],
-        skills: req.body.skills ? req.body.skills.split(",") : [],
-      };
-
-      // Handle uploaded images if provided
-      if (req.files?.mainImage?.[0]) {
-        updates.mainImage = `/uploads/${req.files.mainImage[0].filename}`;
-      }
-      if (req.files?.backgroundImage?.[0]) {
-        updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
-      }
-
-      // Update user in the database
-      const updatedUser = await User.findOneAndUpdate(
-        { username: req.session.loggedInUsername },
-        updates,
-        { new: true } // Return the updated document
-      );
-
-      if (!updatedUser) {
-        return res.status(404).send("User not found");
-      }
-
-      // Redirect to the profile page after successful update
-      res.redirect("/profile");
-    } catch (err) {
-      console.error("Error updating profile:", err.message);
-      res.status(500).send("Server error");
-    }
-  }
-);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

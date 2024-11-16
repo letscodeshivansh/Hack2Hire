@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Profile</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .update-profile-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+      
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      
+      form label {
+        display: block;
+        font-weight: bold;
+        margin-top: 15px;
+        color: #555;
+      }
+      
+      form input[type="text"],
+      form textarea,
+      form input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      
+      form textarea {
+        resize: vertical;
+        height: 80px;
+      }
+      
+      form input[type="file"] {
+        padding: 5px;
+      }
+      
+      .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      
+      .submit-btn:hover {
+        background-color: #0056b3;
+      }
+      
+  </style> 
+</head>
+<body>
+  <h1>Update Profile</h1>
+  <form action="/profile/update" method="POST" enctype="multipart/form-data">
+    <label for="bio">Bio:</label>
+    <input type="text" name="bio" value="<%= profile.bio %>">
+
+    <label for="contact">Contact:</label>
+    <input type="text" name="contact" value="<%= profile.contact %>">
+
+    <label for="mainImage">Profile Image:</label>
+    <input type="file" name="mainImage" accept="image/png, image/jpeg">
+
+    <label for="backgroundImage">Background Image:</label>
+    <input type="file" name="backgroundImage" accept="image/png, image/jpeg">
+
+    <label for="experience">Experience (comma-separated):</label>
+    <input type="text" name="experience" value="<%= profile.experience.join(",") %>">
+
+    <label for="education">Education (comma-separated):</label>
+    <input type="text" name="education" value="<%= profile.education.join(",") %>">
+
+    <label for="projects">Projects Done (comma-separated):</label>
+    <input type="text" name="projects" value="<%= profile.projects.join(",") %>">
+
+    <label for="skills">Skills (comma-separated):</label>
+    <input type="text" name="skills" value="<%= profile.skills.join(",") %>">
+
+    <button type="submit">Save Changes</button>
+  </form>
+</body>
+</html>

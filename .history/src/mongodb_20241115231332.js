@@ -106,6 +106,10 @@ const messageSchema = new mongoose.Schema({
 });
 
 
+
+
+const Profile = mongoose.model('Profile', profileSchema);
+
 // Create and export the Task model
 const Task = mongoose.model('Task', taskSchema);
 

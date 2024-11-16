@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-
+// Retrieve MongoDB connection URI from environment variable
 const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/MakeMyWork";
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -30,7 +30,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
       required: true
     },
     images: [{
-      type: String, 
+      type: String, // Assuming that we will store image URLs as strings
     }],
     taskOwner: {
       type: String,
@@ -42,51 +42,10 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true 
-  },
+    unique: true   },
   password: {
     type: String,
     required: true
-  },
-  bio: {
-    type: String,
-    default: ""
-  },
-  contact: {
-    type: String,
-    default: ""
-  },
-  mainImage: {
-    type: String,
-    default: ""
-  },
-  backgroundImage: {
-    type: String,
-    default: ""
-  },
-  totalConnections: {
-    type: Number,
-    default: 0
-  },
-  rating: {
-    type: Number,
-    default: 0
-  },
-  experience: {
-    type: [String],
-    default: []
-  },
-  education: {
-    type: [String],
-    default: []
-  },
-  projects: {
-    type: [String],
-    default: []
-  },
-  skills: {
-    type: [String],
-    default: []
   }
 });
 

@@ -388,34 +388,31 @@ app.post(
 
     try {
       const updates = {
-        bio: req.body.bio || "",
-        contact: req.body.contact || "",
+        bio: req.body.bio,
+        contact: req.body.contact,
         experience: req.body.experience ? req.body.experience.split(",") : [],
         education: req.body.education ? req.body.education.split(",") : [],
         projects: req.body.projects ? req.body.projects.split(",") : [],
         skills: req.body.skills ? req.body.skills.split(",") : [],
       };
 
-      // Handle uploaded images if provided
-      if (req.files?.mainImage?.[0]) {
+      // Add uploaded images if provided
+      if (req.files.mainImage) {
         updates.mainImage = `/uploads/${req.files.mainImage[0].filename}`;
       }
-      if (req.files?.backgroundImage?.[0]) {
+      if (req.files.backgroundImage) {
         updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
       }
 
-      // Update user in the database
-      const updatedUser = await User.findOneAndUpdate(
+      const result = await User.findOneAndUpdate(
         { username: req.session.loggedInUsername },
         updates,
         { new: true } // Return the updated document
       );
-
-      if (!updatedUser) {
+      if (!result) {
         return res.status(404).send("User not found");
       }
 
-      // Redirect to the profile page after successful update
       res.redirect("/profile");
     } catch (err) {
       console.error("Error updating profile:", err.message);

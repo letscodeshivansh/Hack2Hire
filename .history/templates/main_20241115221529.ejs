@@ -10,13 +10,10 @@
     <div class="container">
         <div class="sidebar">
             <div class="profile">
-                <img src="assets/1.jpg" alt="User Avatar" class="profile-image">
-                <h2 class="username"><a href="/profile"><%= loggedInUsername %></a></h2> <!-- Display the username dynamically -->
-
+                <img src="assests/1.jpg" alt="User Avatar" class="profile-image">
+                <h2 class="username">CHAD</h2>
                 <p class="user-bio">Developer | Designer | Tech Enthusiast</p>
-                <a href="/postshare">
-                    <button class="post-button">Post</button>
-                </a>
+                <button class="post-button">Post</button>
             </div>
             <div class="menu">
                 <button class="menu-item">Technology</button>
@@ -26,27 +23,32 @@
                 <button class="menu-item">Blockchain</button>
                 <button class="menu-item">Artificial Intelligence</button>
                 <button class="menu-item">Cloud</button>
-                <button class="menu-item">Database</button>
+                <button class="menu-item">DataBase</button>
+
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="main-content-heading">Community Forum</div>
 
-            <% posts.forEach(post => { %>
+
+
+        
+        <div class="main-content">
+            
+            <div class="main-content-heading">Community Forum</div>
+    
+    
+    
+    
             <div class="post-card">
                 <div class="post-header">
-                    <!-- Post photo link to author profile -->
-                    <a href="/profile/<%= loggedInUsername === post.author ? '' : post.author %>">
-                        <img src="<%= post.imageUrl || 'assets/5.jpg' %>" alt="Post User" class="post-avatar">
-                    </a>
+                    <img src="assests/5.jpg" alt="Post User" class="post-avatar">
                     <div class="post-info">
-                        <h3 class="post-username"><%= post.author %></h3> <!-- Author name -->
-                        <p class="post-date"><%= post.createdAt.toLocaleString() %></p> <!-- Post date -->
+                        <h3 class="post-username">User</h3>
+                        <p class="post-date">2 hrs ago</p>
                     </div>
                 </div>
                 <div class="post-content">
-                    <p><%= post.caption %></p> <!-- Post caption -->
+                    <p>Some interesting code snippet or description here...</p>
                 </div>
                 <div class="post-footer">
                     <button class="like-button">❤️</button>
@@ -54,7 +56,12 @@
                     <button class="share-button">⇨</button>
                 </div>
             </div>
-            <% }) %>
+            
+
+            
+            
+            
+            </div>
         </div>
     </div>
 </body>

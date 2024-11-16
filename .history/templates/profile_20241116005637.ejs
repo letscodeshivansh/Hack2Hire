@@ -7,7 +7,7 @@
   <link href="profile.css" rel="stylesheet">
 </head>
 <body>
-  <form action="/profile/update" method="post">
+  <form action="/profile" method="post">
     <div class="profile-container">
       <div class="background-image" style="background-image: url('<%= profile.backgroundImage %>');"></div>
       <div class="profile-header">
@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <a href="/profile/update" class="btn">Update Profile</a>
+      <button onclick="window.location.href='/update_profile'">Update Profile</button>
     </div>
   </form>
 </body>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Profile</title>
+  
+</head>
+<body>
+  <h1>Update Profile</h1>
+  <form action="/profile/update" method="POST" enctype="multipart/form-data">
+    <label for="bio">Bio:</label>
+    <input type="text" name="bio" value="<%= profile.bio %>">
+
+    <label for="contact">Contact:</label>
+    <input type="text" name="contact" value="<%= profile.contact %>">
+
+    <label for="mainImage">Profile Image:</label>
+    <input type="file" name="mainImage" accept="image/png, image/jpeg">
+
+    <label for="backgroundImage">Background Image:</label>
+    <input type="file" name="backgroundImage" accept="image/png, image/jpeg">
+
+    <label for="experience">Experience (comma-separated):</label>
+    <input type="text" name="experience" value="<%= profile.experience.join(",") %>">
+
+    <label for="education">Education (comma-separated):</label>
+    <input type="text" name="education" value="<%= profile.education.join(",") %>">
+
+    <label for="projects">Projects Done (comma-separated):</label>
+    <input type="text" name="projects" value="<%= profile.projects.join(",") %>">
+
+    <label for="skills">Skills (comma-separated):</label>
+    <input type="text" name="skills" value="<%= profile.skills.join(",") %>">
+
+    <button type="submit">Save Changes</button>
+  </form>
+</body>
+</html>
