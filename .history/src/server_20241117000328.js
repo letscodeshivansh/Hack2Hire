@@ -59,7 +59,7 @@ app.use(express.static(path.join(parentDir, 'assets')));
 app.get('/', async (req, res) => {
   res.render('landing');
 });
-app.get('/landing', async (req, res) => {
+app.get('/landing', isAuthenticated, async (req, res) => {
   res.render('landing');
 });
 

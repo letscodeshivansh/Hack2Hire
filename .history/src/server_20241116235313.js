@@ -56,10 +56,10 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(parentDir, 'public')));
 app.use(express.static(path.join(parentDir, 'assets')));
 
-app.get('/', async (req, res) => {
+app.get('/', isAuthenticated, async (req, res) => {
   res.render('landing');
 });
-app.get('/landing', async (req, res) => {
+app.get('/landing', isAuthenticated, async (req, res) => {
   res.render('landing');
 });
 
