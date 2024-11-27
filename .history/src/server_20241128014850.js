@@ -407,10 +407,11 @@ app.post(
         updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
       }
 
+      // Update user in the database
       const updatedUser = await User.findOneAndUpdate(
         { username: req.session.loggedInUsername },
         updates,
-        { new: true } 
+        { new: true } // Return the updated document
       );
 
       if (!updatedUser) {

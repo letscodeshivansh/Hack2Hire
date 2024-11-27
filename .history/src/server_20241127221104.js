@@ -8,7 +8,8 @@ const mongoose = require('mongoose');
 const { Task, User, Message, Post } = require('./mongodb');  
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { PythonShell } = require("python-shell");
+
 
 require('dotenv').config();
 
@@ -26,9 +27,8 @@ const sessionMiddleware = session({
 });
 
 app.use(sessionMiddleware);
-app.use(express.json());
 
-//for authentication fd
+//for authentication 
 function isAuthenticated(req, res, next) {
   if (req.session.loggedInUsername) {
     return next();
@@ -42,7 +42,7 @@ io.use(require('express-socket.io-session')(sessionMiddleware, {
 
 const parentDir = path.join(__dirname, '../');
 
-// Connect to MongoDB 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
@@ -67,52 +67,12 @@ app.get('/aboutus', (req, res) => {
     res.render("aboutus");
 });
 
-//gemini setup 
-const genAI = new GoogleGenerativeAI("AIzaSyCWCdLylg8SMj9W7CUeiUnp0-mbhMJzRlU");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-app.get("/askai", (req, res) => {
-  res.render("askai");
-});
-
-app.post("/askai", async (req, res) => {
-  const question = req.body.question;
-
-  if (!question) {
-    return res.status(400).json({ error: "No question provided" });
-  }
-
-  try {
-    console.log("Received question:", question);
-
-    const result = await model.generateContent(question);
-    console.log("The result that it generated:", JSON.stringify(result, null, 2));
-
-    const response = result.response;
-    if (
-      !response ||
-      !response.candidates ||
-      !response.candidates[0]?.content?.parts[0]?.text
-    ) {
-      throw new Error("Invalid response from AI model");
-    }
-
-    const answer = response.candidates[0].content.parts[0].text.trim();
-
-    res.json({ answer });
-  } catch (error) {
-    console.error("Error with AI response:", error.message);
-    res.status(500).json({ error: "Failed to generate AI response" });
-  }
-}); 
-
-
 //the page open after logging 
 app.get('/index', async (req, res) => {
   try {
     const loggedInUsername = req.session.loggedInUsername;
-    const tasks = await Task.find(); 
-    const posts = await Post.find(); 
+    const tasks = await Task.find(); // Fetch tasks to display on the index page
+    const posts = await Post.find(); // Fetch posts to display on the index page
 
     res.render('index', { loggedInUsername, tasks, posts });
   } catch (error) {
@@ -129,7 +89,10 @@ app.get("/chatroom", isAuthenticated, async (req, res) => {
   }
 
   try {
+    // Fetch all tasks where the loggedInUsername is the taskOwner
     const tasks = await Task.find({ taskOwner: loggedInUsername });
+
+    // Fetch messages where the loggedInUsername is the receiver
     const messages = await Message.find({ receiver: loggedInUsername }); 
 
     res.render("chatroom", { tasks, messages, loggedInUsername });
@@ -308,6 +271,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
     }
   });
 
+// Route to render post sharing page
 app.get('/postshare', (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
   if (!loggedInUsername) {
@@ -340,6 +304,31 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
   }
 });
 
+app.get("/askai", (req, res) => {
+  res.render("askai");
+});
+
+// Route to handle AI chat responses
+app.post("/askai", async (req, res) => {
+  const question = req.body.question;
+
+  if (!question) {
+    return res.status(400).json({ error: "No question provided" });
+  }
+
+  try {
+    const result = await model.generateContent(question);
+    const answer = result.response.text;
+
+    console.log("User question:", question);
+    console.log("AI response:", answer);
+
+    res.json({ answer });
+  } catch (error) {
+    console.error("Error with AI response:", error);
+    res.status(500).json({ error: "Failed to generate AI response" });
+  }
+});
 
 // GET Profile
 app.get("/profile", async (req, res) => {
@@ -407,16 +396,18 @@ app.post(
         updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
       }
 
+      // Update user in the database
       const updatedUser = await User.findOneAndUpdate(
         { username: req.session.loggedInUsername },
         updates,
-        { new: true } 
+        { new: true } // Return the updated document
       );
 
       if (!updatedUser) {
         return res.status(404).send("User not found");
       }
 
+      // Redirect to the profile page after successful update
       res.redirect("/profile");
     } catch (err) {
       console.error("Error updating profile:", err.message);
@@ -431,6 +422,6 @@ app.use((err, req, res, next) => {
 });
 
 const port = 6969;
-server.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

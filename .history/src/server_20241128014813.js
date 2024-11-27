@@ -308,6 +308,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
     }
   });
 
+// Route to render post sharing page
 app.get('/postshare', (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
   if (!loggedInUsername) {
@@ -407,16 +408,18 @@ app.post(
         updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
       }
 
+      // Update user in the database
       const updatedUser = await User.findOneAndUpdate(
         { username: req.session.loggedInUsername },
         updates,
-        { new: true } 
+        { new: true } // Return the updated document
       );
 
       if (!updatedUser) {
         return res.status(404).send("User not found");
       }
 
+      // Redirect to the profile page after successful update
       res.redirect("/profile");
     } catch (err) {
       console.error("Error updating profile:", err.message);

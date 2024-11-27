@@ -86,6 +86,8 @@ app.post("/askai", async (req, res) => {
     console.log("Received question:", question);
 
     const result = await model.generateContent(question);
+
+    // Log the full result to understand its structure
     console.log("The result that it generated:", JSON.stringify(result, null, 2));
 
     const response = result.response;
@@ -111,8 +113,8 @@ app.post("/askai", async (req, res) => {
 app.get('/index', async (req, res) => {
   try {
     const loggedInUsername = req.session.loggedInUsername;
-    const tasks = await Task.find(); 
-    const posts = await Post.find(); 
+    const tasks = await Task.find(); // Fetch tasks to display on the index page
+    const posts = await Post.find(); // Fetch posts to display on the index page
 
     res.render('index', { loggedInUsername, tasks, posts });
   } catch (error) {
@@ -129,7 +131,10 @@ app.get("/chatroom", isAuthenticated, async (req, res) => {
   }
 
   try {
+    // Fetch all tasks where the loggedInUsername is the taskOwner
     const tasks = await Task.find({ taskOwner: loggedInUsername });
+
+    // Fetch messages where the loggedInUsername is the receiver
     const messages = await Message.find({ receiver: loggedInUsername }); 
 
     res.render("chatroom", { tasks, messages, loggedInUsername });
@@ -308,6 +313,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
     }
   });
 
+// Route to render post sharing page
 app.get('/postshare', (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
   if (!loggedInUsername) {
@@ -407,16 +413,18 @@ app.post(
         updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
       }
 
+      // Update user in the database
       const updatedUser = await User.findOneAndUpdate(
         { username: req.session.loggedInUsername },
         updates,
-        { new: true } 
+        { new: true } // Return the updated document
       );
 
       if (!updatedUser) {
         return res.status(404).send("User not found");
       }
 
+      // Redirect to the profile page after successful update
       res.redirect("/profile");
     } catch (err) {
       console.error("Error updating profile:", err.message);
