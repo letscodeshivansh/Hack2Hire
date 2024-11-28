@@ -1,0 +1,8 @@
+version : "3.3"
+services :
+  web :
+     image: "souravk45/makemywork:latest"
+       #build:
+       #context: .
+     ports :
+         - "6969:3000"
