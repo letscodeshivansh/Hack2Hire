@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Forum UI</title>
     <link rel="stylesheet" href="index.css">
-
+    <style>
+        
+    </style>
 </head>
 <body>
     <div class="container">
@@ -59,12 +61,6 @@
 
     <!-- Chatbot UI -->
     <div id="chat-container">
-        <div id="back-button">
-            ← <span>Back</span>
-        </div>
-        <div id="chat-heading">
-            Hi, this is AI Assistant
-        </div>
         <div id="chat-box"></div>
         <div id="input-container">
             <input type="text" id="user-input" placeholder="Type your question...">
@@ -75,19 +71,12 @@
     <script>
         const chatContainer = document.getElementById('chat-container');
         const chatToggle = document.getElementById('chat-toggle');
-        const backButton = document.getElementById('back-button');
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
 
-        // Toggle chatbot visibility
         chatToggle.addEventListener('click', () => {
-            chatContainer.style.display = 'flex';
-        });
-
-        // Back button to close chatbot
-        backButton.addEventListener('click', () => {
-            chatContainer.style.display = 'none';
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'flex' : 'none';
         });
 
         async function sendMessage() {

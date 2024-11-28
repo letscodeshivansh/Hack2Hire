@@ -5,7 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Forum UI</title>
     <link rel="stylesheet" href="index.css">
-
+    <style>
+        /* Chatbot styles */
+        #chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        #chat-box {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px 14px;
+            border-radius: 16px;
+            max-width: 75%;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        .user-message {
+            background-color: #daf7dc;
+            align-self: flex-end;
+        }
+        .ai-message {
+            background-color: #e2e2e2;
+            align-self: flex-start;
+        }
+        #input-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+            font-size: 1em;
+        }
+        #send-button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        #send-button:hover {
+            background-color: #45a049;
+        }
+        #send-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -59,12 +144,6 @@
 
     <!-- Chatbot UI -->
     <div id="chat-container">
-        <div id="back-button">
-            ← <span>Back</span>
-        </div>
-        <div id="chat-heading">
-            Hi, this is AI Assistant
-        </div>
         <div id="chat-box"></div>
         <div id="input-container">
             <input type="text" id="user-input" placeholder="Type your question...">
@@ -75,19 +154,12 @@
     <script>
         const chatContainer = document.getElementById('chat-container');
         const chatToggle = document.getElementById('chat-toggle');
-        const backButton = document.getElementById('back-button');
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
 
-        // Toggle chatbot visibility
         chatToggle.addEventListener('click', () => {
-            chatContainer.style.display = 'flex';
-        });
-
-        // Back button to close chatbot
-        backButton.addEventListener('click', () => {
-            chatContainer.style.display = 'none';
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'flex' : 'none';
         });
 
         async function sendMessage() {
