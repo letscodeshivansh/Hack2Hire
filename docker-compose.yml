@@ -1,0 +1,7 @@
+services :
+  web :
+     image: "souravk45/makemywork:latest"
+       #build:
+       #context: .
+     ports :
+         - "6969:6969"
