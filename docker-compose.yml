@@ -5,4 +5,4 @@ services :
        #build:
        #context: .
      ports :
-         - "6969:3000"
+         - "6969:6969"
