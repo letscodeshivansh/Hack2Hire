@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Hubot+Sans:ital,wght@0,200..900;1,200..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100;1,100&family=Rubik+Wet+Paint&display=swap');
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Rubik Wet Paint', 'Arial', 'Helvetica', sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
-
 
 body {
     background-color: #1c1c1c;
@@ -99,7 +102,7 @@ body {
     cursor: pointer;
     margin: 5px 0;
     border-radius: 15px;
-    -webkit-border-radius: 15px;
+    webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     -ms-border-radius: 15px;
     -o-border-radius: 15px;
@@ -140,7 +143,7 @@ body {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .post-card:hover{
-    transform: scale(1.05);
+    transform:scale(1.05);
     -webkit-transform:scale(1.05);
     -moz-transform:scale(1.05);
     -ms-transform:scale(1.05);
