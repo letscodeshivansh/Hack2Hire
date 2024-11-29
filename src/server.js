@@ -67,6 +67,21 @@ app.get('/aboutus', (req, res) => {
     res.render("aboutus");
 });
 
+//updating multer and storage wala part
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "uploads")); // Save to the 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
 //gemini setup 
 const genAI = new GoogleGenerativeAI("AIzaSyCWCdLylg8SMj9W7CUeiUnp0-mbhMJzRlU");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -260,17 +275,6 @@ app.post('/signup', [
 });
 
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname);
-    },
-  }),
-});
-
 app.get('/postwork', isAuthenticated, async (req, res) => {
   try {
     const tasks = await Task.find();
@@ -340,7 +344,6 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
   }
 });
 
-
 // GET Profile
 app.get("/profile", async (req, res) => {
   if (!req.session.loggedInUsername) {
@@ -348,7 +351,7 @@ app.get("/profile", async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ username: req.session.loggedInUsername }); // Use findOne for username
+    const user = await User.findOne({ username: req.session.loggedInUsername }); // Fetch the logged-in user's profile
     if (!user) {
       return res.status(404).send("User not found");
     }
@@ -366,13 +369,13 @@ app.get("/profile/update", async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ username: req.session.loggedInUsername });
+    const user = await User.findOne({ username: req.session.loggedInUsername }); // Fetch the logged-in user's data for the update form
     if (!user) {
       return res.status(404).send("User not found");
     }
     res.render("update_profile", { profile: user });
   } catch (err) {
-    console.error("Error fetching profile:", err.message);
+    console.error("Error fetching profile for update:", err.message);
     res.status(500).send("Server error");
   }
 });
@@ -390,16 +393,17 @@ app.post(
     }
 
     try {
+      // Prepare the updates from the form data
       const updates = {
         bio: req.body.bio || "",
         contact: req.body.contact || "",
-        experience: req.body.experience ? req.body.experience.split(",") : [],
-        education: req.body.education ? req.body.education.split(",") : [],
-        projects: req.body.projects ? req.body.projects.split(",") : [],
-        skills: req.body.skills ? req.body.skills.split(",") : [],
+        experience: req.body.experience ? req.body.experience.split(",").map(item => item.trim()) : [],
+        education: req.body.education ? req.body.education.split(",").map(item => item.trim()) : [],
+        projects: req.body.projects ? req.body.projects.split(",").map(item => item.trim()) : [],
+        skills: req.body.skills ? req.body.skills.split(",").map(item => item.trim()) : [],
       };
 
-      // Handle uploaded images if provided
+      // Add paths for uploaded images, if present
       if (req.files?.mainImage?.[0]) {
         updates.mainImage = `/uploads/${req.files.mainImage[0].filename}`;
       }
@@ -407,23 +411,25 @@ app.post(
         updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
       }
 
+      // Update the user document in the database
       const updatedUser = await User.findOneAndUpdate(
         { username: req.session.loggedInUsername },
         updates,
-        { new: true } 
+        { new: true } // Return the updated document
       );
 
       if (!updatedUser) {
         return res.status(404).send("User not found");
       }
 
-      res.redirect("/profile");
+      res.redirect("/profile"); // Redirect to the profile page after successful update
     } catch (err) {
       console.error("Error updating profile:", err.message);
       res.status(500).send("Server error");
     }
   }
 );
+module.exports = app;
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

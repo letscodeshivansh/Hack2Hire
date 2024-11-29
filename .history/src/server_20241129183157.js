@@ -5,10 +5,10 @@ const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const { Task, User, Message } = require('./mongodb');  
+const { Task, User, Message, Post } = require('./mongodb');  
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
-
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 require('dotenv').config();
 
@@ -26,6 +26,15 @@ const sessionMiddleware = session({
 });
 
 app.use(sessionMiddleware);
+app.use(express.json());
+
+//for authentication fd
+function isAuthenticated(req, res, next) {
+  if (req.session.loggedInUsername) {
+    return next();
+  }
+  res.redirect('/login');
+}
 
 io.use(require('express-socket.io-session')(sessionMiddleware, {
   autoSave: true
@@ -33,7 +42,7 @@ io.use(require('express-socket.io-session')(sessionMiddleware, {
 
 const parentDir = path.join(__dirname, '../');
 
-// Connect to MongoDB
+// Connect to MongoDB 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
@@ -47,7 +56,10 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(parentDir, 'public')));
 app.use(express.static(path.join(parentDir, 'assets')));
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  res.render('landing');
+});
+app.get('/landing', async (req, res) => {
   res.render('landing');
 });
 
@@ -55,18 +67,61 @@ app.get('/aboutus', (req, res) => {
     res.render("aboutus");
 });
 
+//gemini setup 
+const genAI = new GoogleGenerativeAI("AIzaSyCWCdLylg8SMj9W7CUeiUnp0-mbhMJzRlU");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+app.get("/askai", (req, res) => {
+  res.render("askai");
+});
+
+app.post("/askai", async (req, res) => {
+  const question = req.body.question;
+
+  if (!question) {
+    return res.status(400).json({ error: "No question provided" });
+  }
+
+  try {
+    console.log("Received question:", question);
+
+    const result = await model.generateContent(question);
+    console.log("The result that it generated:", JSON.stringify(result, null, 2));
+
+    const response = result.response;
+    if (
+      !response ||
+      !response.candidates ||
+      !response.candidates[0]?.content?.parts[0]?.text
+    ) {
+      throw new Error("Invalid response from AI model");
+    }
+
+    const answer = response.candidates[0].content.parts[0].text.trim();
+
+    res.json({ answer });
+  } catch (error) {
+    console.error("Error with AI response:", error.message);
+    res.status(500).json({ error: "Failed to generate AI response" });
+  }
+}); 
+
+
+//the page open after logging 
 app.get('/index', async (req, res) => {
   try {
-    const tasks = await Task.find();
-    const loggedInUsername = req.session.loggedInUsername; 
-    res.render('index', { tasks, loggedInUsername });
+    const loggedInUsername = req.session.loggedInUsername;
+    const tasks = await Task.find(); 
+    const posts = await Post.find(); 
+
+    res.render('index', { loggedInUsername, tasks, posts });
   } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).send('Error fetching tasks');
+    console.error('Error loading index page:', error);
+    res.status(500).send('Error loading page');
   }
 });
 
-app.get("/chatroom", async (req, res) => {
+app.get("/chatroom", isAuthenticated, async (req, res) => {
   const loggedInUsername = req.session.loggedInUsername;
 
   if (!loggedInUsername) {
@@ -74,10 +129,7 @@ app.get("/chatroom", async (req, res) => {
   }
 
   try {
-    // Fetch all tasks where the loggedInUsername is the taskOwner
     const tasks = await Task.find({ taskOwner: loggedInUsername });
-
-    // Fetch messages where the loggedInUsername is the receiver
     const messages = await Message.find({ receiver: loggedInUsername }); 
 
     res.render("chatroom", { tasks, messages, loggedInUsername });
@@ -219,6 +271,18 @@ const upload = multer({
   }),
 });
 
+app.get('/postwork', isAuthenticated, async (req, res) => {
+  try {
+    const tasks = await Task.find();
+    const loggedInUsername = req.session.loggedInUsername;
+    res.render('postwork', { tasks, loggedInUsername });
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).send('Error fetching tasks');
+  }
+});
+
+//route for postwork
 app.post('/postwork', upload.array('images', 5), async (req, res) => {
     try {
       const { title, description, deadline, price } = req.body;
@@ -231,7 +295,7 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
         deadline,
         price,
         images: imageUrls,
-        taskOwner, // Use req.session.loggedInUsername as task owner
+        taskOwner, 
       });
   
       await taskAdded.save();
@@ -243,31 +307,25 @@ app.post('/postwork', upload.array('images', 5), async (req, res) => {
       res.status(500).send('Error adding task');
     }
   });
-  
 
-app.get('/postwork', async (req, res) => {
-  try {
-    const tasks = await Task.find();
-    const loggedInUsername = req.session.loggedInUsername;
-    res.render('postwork', { tasks, loggedInUsername });
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).send('Error fetching tasks');
+app.get('/postshare', (req, res) => {
+  const loggedInUsername = req.session.loggedInUsername;
+  if (!loggedInUsername) {
+    return res.redirect('/login'); 
   }
+  res.render('postshare', { loggedInUsername });
 });
 
 app.post('/postshare', upload.single('image'), async (req, res) => {
   try {
     const { caption } = req.body;
-    const author = req.session.loggedInUsername; // Fetch logged-in user from session
+    const author = req.session.loggedInUsername;
 
-    // Check if image was uploaded
     let imageUrl = '';
     if (req.file) {
-      imageUrl = '/uploads/' + req.file.filename;  // Save the image path
+      imageUrl = '/uploads/' + req.file.filename;
     }
 
-    // Create a new post and save to the database
     const newPost = new Post({
       caption,
       imageUrl,
@@ -275,15 +333,104 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     });
 
     await newPost.save();
-
-    // Redirect to index or wherever posts are displayed
     res.redirect('/index');
   } catch (error) {
     console.error('Error sharing post:', error);
     res.status(500).send('Error sharing post');
   }
 });
+
+
+// GET Profile
+app.get("/profile", async (req, res) => {
+  if (!req.session.loggedInUsername) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const user = await User.findOne({ username: req.session.loggedInUsername }); // Use findOne for username
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.render("profile", { profile: user });
+  } catch (err) {
+    console.error("Error fetching profile:", err.message, err.stack);
+    res.status(500).send("Server error");
+  }
+});
+
+// GET Update Profile Page
+app.get("/profile/update", async (req, res) => {
+  if (!req.session.loggedInUsername) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const user = await User.findOne({ username: req.session.loggedInUsername });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.render("update_profile", { profile: user });
+  } catch (err) {
+    console.error("Error fetching profile:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// POST Update Profile with Image Upload
+app.post(
+  "/profile/update",
+  upload.fields([
+    { name: "mainImage", maxCount: 1 },
+    { name: "backgroundImage", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    if (!req.session.loggedInUsername) {
+      return res.redirect("/login");
+    }
+
+    try {
+      const updates = {
+        bio: req.body.bio || "",
+        contact: req.body.contact || "",
+        experience: req.body.experience ? req.body.experience.split(",") : [],
+        education: req.body.education ? req.body.education.split(",") : [],
+        projects: req.body.projects ? req.body.projects.split(",") : [],
+        skills: req.body.skills ? req.body.skills.split(",") : [],
+      };
+
+      // Handle uploaded images if provided
+      if (req.files?.mainImage?.[0]) {
+        updates.mainImage = `/uploads/${req.files.mainImage[0].filename}`;
+      }
+      if (req.files?.backgroundImage?.[0]) {
+        updates.backgroundImage = `/uploads/${req.files.backgroundImage[0].filename}`;
+      }
+
+      const updatedUser = await User.findOneAndUpdate(
+        { username: req.session.loggedInUsername },
+        updates,
+        { new: true } 
+      );
+
+      if (!updatedUser) {
+        return res.status(404).send("User not found");
+      }
+
+      res.redirect("/profile");
+    } catch (err) {
+      console.error("Error updating profile:", err.message);
+      res.status(500).send("Server error");
+    }
+  }
+);
+
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).send('Something went wrong, please try again later');
+// });
+
 const port = 6969;
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+server.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on http://0.0.0.0:${port}`);
 });
