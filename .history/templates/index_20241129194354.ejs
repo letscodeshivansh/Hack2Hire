@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Forum</title>
+    <title>Community Forum UI</title>
     <link rel="stylesheet" href="index.css">
+
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <div class="profile">
                 <img src="assets/1.jpg" alt="User Avatar" class="profile-image">
                 <h2 class="username"><a href="/profile"><%= loggedInUsername %></a></h2>
                 <p class="user-bio">Developer | Designer | Tech Enthusiast</p>
-                <button class="ai-button" id="chat-toggle">💬 Chat</button>
-                <a href="/postwork"><button class="ai-button">Post Work</button></a>
+                <button class="ai-button" id="chat-toggle">💬</button>
+                <a href="/postwork"><button class="ai-button">Post-Work</button></a>
                 <a href="/tasks"><button class="ai-button">Search Task</button></a>
-                <a href="/postshare"><button class="post-button">Share Post</button></a>
+                <a href="/postshare"><button class="post-button">Post</button></a>
             </div>
             <div class="menu">
                 <button class="menu-item">Technology</button>
@@ -31,27 +31,31 @@
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <h1 class="main-content-heading">Community Forum</h1>
+            <div class="main-content-heading">Community Forum</div>
             <% posts.forEach(post => { %>
             <div class="post-card">
                 <div class="post-header">
                     <a href="/profile/<%= loggedInUsername === post.author ? '' : post.author %>">
-                        <img src="<%= post.imageUrl %>" alt="Avatar" class="post-avatar">
+                        <img src="<%= post.imageUrl %>" class="post-avatar">
                     </a>
+
+                
                     <div class="post-info">
                         <h3 class="post-username"><%= post.author %></h3>
                         <p class="post-date"><%= post.createdAt.toLocaleString() %></p>
+                    </div>
+                    <div class="post-image">
+                        <img src="<%= post.mainImage %>" alt="Post Image">
                     </div>
                 </div>
                 <div class="post-content">
                     <p><%= post.caption %></p>
                 </div>
                 <div class="post-footer">
-                    <button class="like-button">❤️ Like</button>
-                    <button class="comment-button">💬 Comment</button>
-                    <button class="share-button">⇨ Share</button>
+                    <button class="like-button">❤️</button>
+                    <button class="comment-button">💬</button>
+                    <button class="share-button">⇨</button>
                 </div>
             </div>
             <% }) %>
@@ -59,12 +63,12 @@
     </div>
 
     <!-- Chatbot UI -->
-    <div id="chat-container" class="hidden">
+    <div id="chat-container">
         <div id="back-button">
             ← <span>Back</span>
         </div>
         <div id="chat-heading">
-            Hi, I’m your AI Assistant!
+            Hi, this is AI Assistant
         </div>
         <div id="chat-box"></div>
         <div id="input-container">

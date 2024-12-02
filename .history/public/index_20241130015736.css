@@ -25,12 +25,10 @@ body {
     margin-top: 10px;
     cursor: pointer;
     font-size: 14px;
-    z-index: 20;
 }
 
 .ai-button:hover, .post-button:hover {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
-    z-index: 100;
 }
 
 .sidebar {
@@ -82,7 +80,6 @@ body {
 .postshare-button:hover {
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
-    z-index: 10;
 }
 
 .post-button {
@@ -171,11 +168,10 @@ body {
 }
 
 .post-avatar {
-    padding-top: 20 px;
-    width: 100%;
-    height: 100%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     margin-right: 10px;
-    object-fit: cover; 
 }
 
 .post-info {

@@ -25,12 +25,10 @@ body {
     margin-top: 10px;
     cursor: pointer;
     font-size: 14px;
-    z-index: 20;
 }
 
 .ai-button:hover, .post-button:hover {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
-    z-index: 100;
 }
 
 .sidebar {
@@ -82,7 +80,6 @@ body {
 .postshare-button:hover {
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
-    z-index: 10;
 }
 
 .post-button {
@@ -128,22 +125,19 @@ body {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
 }
 
-.main-content-heading{
-    /* grid-column: 1/-1; */
-    text-align: left;
-    grid-column: 1/4;
-    grid-row: 1/4;
-    font-size: 40px;
-}
-
 .main-content {
     flex-grow: 1;
-    padding: 15px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 15px;
-    margin-top: 8vh;
     margin-left: 17.5vw;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.main-content-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #eaeaea;
 }
 
 
@@ -171,11 +165,10 @@ body {
 }
 
 .post-avatar {
-    padding-top: 20 px;
-    width: 100%;
-    height: 100%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     margin-right: 10px;
-    object-fit: cover; 
 }
 
 .post-info {
