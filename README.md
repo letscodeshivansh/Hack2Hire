@@ -62,12 +62,42 @@
 
 <br>
 
+## Installation 🦿
+
+To install this Project, follow these steps:
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/letscodeshivansh/Hack2Hire-.git
+    cd Hack2Hire
+    ```
+
+2. Initiate npm:
+
+    ```bash
+    npm init -y
+    ```
+
+3. Install dependencies:
+
+    ```bash
+    npm i
+    ```
+
+4. Start the node:
+
+    ```bash
+    npm start
+    ```
+
+ 4. Open http://localhost:6969 with your browser to see the result.
+
+<br> 
+
 ## Team Members 🫂
 
 - Shivansh Srivastava
-- Karanveer Singh
-- Sourav Kispotta
-
 
 ## About us: 
 "We are a team of passionate third-year software and coding enthusiasts from Punjab Engineering College, Chandigarh, driven by a commitment to solving real-world problems with innovative tech solutions."
