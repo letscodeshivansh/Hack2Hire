@@ -8,6 +8,39 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body> 
+  <div class="first-page">
+    <!-- Logo and Navigation -->
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" class="logo">
+    </div>
+    <div class="nav-container">
+      <div class="nav-items">
+        <a href="index">Home</a>
+        <a href="aboutus">About Us</a>
+        <a href="chatroom">ChatRoom</a>
+        <a href="#">
+          Hi, <% if (typeof loggedInUsername !== 'undefined' && loggedInUsername) { %>
+          <p><%= loggedInUsername %></p>
+          <% } %>
+        </a> 
+      </div>
+      <div class="navicons">
+        <!-- Placeholder for collapsed navigation items -->
+      </div>
+    </div>
+
+    <!-- Add Work and Add Post Buttons -->
+    <div class="addwork"><button type="button"><a href="postwork">Add Work</a></button></div>
+    <div class="addpost"><button type="button"><a href="postshare">Add Post</a></button></div>
+    <div class="ai-chat"><button type="button"><a href="askai">Ask AI</a></button></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="second-image">
+    <div class="heading"><h3>Make My Work</h3></div>
+    <div class="subheading"><h2>Connecting Talent <br> With Opportunity</h2></div>
+  </div>
+
   <div class="black-bg">
     <h2>Explore Work</h2>
     <hr>

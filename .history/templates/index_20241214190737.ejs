@@ -57,7 +57,34 @@
             <% }) %>
         </div>
     </div>
-    
+    <div class="main-content">
+    <h1 class="main-content-heading">Community Forum</h1>
+    <div id="content-container">
+        <!-- Posts will initially load here -->
+        <% posts.forEach(post => { %>
+        <div class="post-card">
+            <div class="post-header">
+                <a href="/profile/<%= loggedInUsername === post.author ? '' : post.author %>">
+                    <img src="<%= post.imageUrl %>" alt="Avatar" class="post-avatar">
+                </a>
+                <div class="post-info">
+                    <h3 class="post-username"><%= post.author %></h3>
+                    <p class="post-date"><%= post.createdAt.toLocaleString() %></p>
+                </div>
+            </div>
+            <div class="post-content">
+                <p><%= post.caption %></p>
+            </div>
+            <div class="post-footer">
+                <button class="like-button">❤️ Like</button>
+                <button class="comment-button">💬 Comment</button>
+                <button class="share-button">⇨ Share</button>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</div>
+
     <!-- Chatbot UI -->
     <div id="chat-container" class="hidden">
         <div id="back-button">

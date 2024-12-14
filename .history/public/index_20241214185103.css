@@ -4,6 +4,7 @@
     padding: 0;
 }
 
+
 body {
     background-color: #1c1c1c;
     color: #eaeaea;
@@ -15,7 +16,7 @@ body {
     width: 100vw;
 }
 
-.ai-button, .post-button, .task-button {
+.ai-button, .post-button {
     background: radial-gradient(circle, rgba(20,66,104,1) 0%, rgba(16,54,73,1) 53%, rgba(43,80,87,1) 100%);
     color: white;
     border: none;
@@ -27,13 +28,14 @@ body {
     z-index: 20;
 }
 
-.ai-button:hover, .post-button:hover, .task-button:hover {
+.ai-button:hover, .post-button:hover {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
     z-index: 100;
 }
 
 .sidebar {
     width: 17vw;
+    /* background-color: #2b2b2b; */
     position: fixed;
     padding: 20px;
     display: flex;
@@ -66,6 +68,39 @@ body {
     font-size: 12px;
 }
 
+.postshare-button {
+    /* background-color: #4c9aff; */
+    background: rgb(20,66,104);
+    background: radial-gradient(circle, rgba(20,66,104,1) 0%, rgba(16,54,73,1) 53%, rgba(43,80,87,1) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.postshare-button:hover {
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
+    z-index: 10;
+}
+
+.post-button {
+    /* background-color: #4c9aff; */
+    background: rgb(20,66,104);
+    background: radial-gradient(circle, rgba(20,66,104,1) 0%, rgba(16,54,73,1) 53%, rgba(43,80,87,1) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.post-button:hover {
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(30,180,188,1) 30%, rgba(18,51,58,1) 100%);
+}
+
 .menu {
     width: 100%;
     display: flex;
@@ -90,7 +125,7 @@ body {
 }
 
 .main-content {
-    margin-left: 30vw;
+    margin-left: 40vw;
     margin-top: 2rem;
     padding: 20px;
     display: grid;
@@ -99,12 +134,13 @@ body {
     width: 50%;
 }
 
+
 .main-content-heading {
     font-size: 36px;
     margin-bottom: 20px;
 }
 
-/* Post styles */
+
 .post-card {
     background-color: #2b2b2b;
     padding: 10px;
@@ -114,10 +150,13 @@ body {
     gap: 8px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-.post-card:hover {
+.post-card:hover{
     transform: scale(1.05);
-    box-shadow: 0 0 6px 6px rgba(0,0,0,0.3);
+    -webkit-transform:scale(1.05);
+    -moz-transform:scale(1.05);
+    -ms-transform:scale(1.05);
+    -o-transform:scale(1.05);
+    box-shadow : 0 0 6px 6px rgba(0,0,0,0.3);
 }
 
 .post-header {
@@ -126,11 +165,11 @@ body {
 }
 
 .post-avatar {
-    width: 50px;
-    height: 50px;
+    padding-top: 20 px;
+    width: 100%;
+    height: 100%;
     margin-right: 10px;
     object-fit: cover; 
-    border-radius: 50%;
 }
 
 .post-info {
@@ -167,63 +206,8 @@ body {
 }
 
 .like-button:hover, .comment-button:hover, .share-button:hover {
-    background-color: #3a8bff;
-}
-
-/* Task styles */
-.task-card {
-    background-color: #1f1f1f;
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.task-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 6px 6px rgba(0,0,0,0.3);
-}
-
-.task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.task-title {
-    font-size: 18px;
-    color: #eaeaea;
-}
-
-.task-deadline {
-    font-size: 12px;
-    color: #a8a8a8;
-}
-
-.task-content {
-    color: #cfcfcf;
-    font-size: 14px;
-    margin-bottom: auto;
-}
-
-.task-footer {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.task-button {
-    background-color: #2b2b2b;
-    color: #eaeaea;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
+    /* background-color: #3a8bff; */
     cursor: pointer;
-}
-
-.task-button:hover {
-    background-color: #3a8bff;
 }
 
 @media (max-width: 768px) {

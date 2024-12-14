@@ -226,16 +226,22 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    // Find the user by username
     const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(401).render('login', { error: 'Invalid username or password' });
     }
+
+    // Compare the provided password with the hashed password in the database
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).render('login', { error: 'Invalid username or password' });
     }
+
+    // Set the session and redirect to the index page
     req.session.loggedInUsername = username;
     res.redirect('/index');
   } catch (error) {
@@ -348,27 +354,6 @@ app.post('/postshare', upload.single('image'), async (req, res) => {
     res.status(500).send('Error sharing post');
   }
 });
-
-app.get('/tasks', async (req, res) => {
-  try {
-    const tasks = await Task.find();
-
-    // Transform data for frontend
-    const formattedTasks = tasks.map(task => ({
-      id: task._id,
-      title: task.title,
-      description: task.description,
-      deadline: new Date(task.deadline).toLocaleDateString(), // Human-readable format
-      price: task.price,
-      taskOwner: task.taskOwner,
-    }));
-
-    res.json(formattedTasks);
-  } catch (err) {
-    res.status(500).send({ error: 'Failed to fetch tasks' });
-  }
-});
-
 
 // GET Profile
 app.get("/profile", async (req, res) => {
