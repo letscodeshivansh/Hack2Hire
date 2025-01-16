@@ -1,0 +1,137 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eaeaea;
+    color: #2b2b2b;
+}
+
+a {
+    text-decoration: none;
+    color: #3a8bff;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #2b2b2b;
+}
+
+/* First Page Styles */
+.first-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: linear-gradient(to bottom, #3a8bff, #2b2b2b);
+    color: #eaeaea;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 10px 20px;
+}
+
+.nav-items {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-items a {
+    color: #eaeaea;
+    font-size: 16px;
+    padding: 8px 12px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-items a:hover {
+    background-color: #eaeaea;
+    color: #2b2b2b;
+    border-radius: 5px;
+}
+
+.login button {
+    background-color: #3a8bff;
+    color: #eaeaea;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login button:hover {
+    background-color: #2b2b2b;
+    color: #eaeaea;
+}
+
+/* Second Image Section */
+.second-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    background: url('background.jpg') no-repeat center center/cover;
+    color: #eaeaea;
+    text-align: center;
+}
+
+.second-image .heading h3 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.second-image .subheading h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+    }
+
+    .nav-items {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .second-image .heading h3 {
+        font-size: 1.5rem;
+    }
+
+    .second-image .subheading h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-items {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .login button {
+        width: 100%;
+        font-size: 14px;
+    }
+}
